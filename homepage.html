@@ -166,17 +166,17 @@
             <div class="container">
                 <header class="section-header">
                     <h2 class="text-center">
-                        Most <span class="main-color">popular</span> tutorials
+                        <span class="main-color">Popular</span> videos
                     </h2>
                 </header>
                 
-                <div id="videos-loader">
+                <div id="popular-videos-loader">
                     <div class="loader"></div>
                 </div>
                 
-                <div id="videos-carousel" style="display: none;">
+                <div id="popular-videos-carousel" style="display: none;">
                     <div class="carousel slide" id="carouselExampleControls2" data-ride="carousel">
-                        <div class="carousel-inner" id="videos-carousel-inner">
+                        <div class="carousel-inner" id="popular-videos-carousel-inner">
                             <!-- Videos will be inserted here by JavaScript -->
                         </div>
                         <a class="carousel-control-prev arrow-left" href="#carouselExampleControls2" role="button" data-slide="prev">
@@ -1166,165 +1166,164 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Fetch quotes from API
-            fetch('https://smileschool-api.hbtn.info/quotes')
-                .then(response => response.json())
-                .then(data => {
-                    // Hide loader
-                    document.getElementById('quotes-loader').style.display = 'none';
-                    const carousel = document.getElementById('quotes-carousel');
-                    carousel.style.display = 'block';
-                    
-                    // Populate carousel with quotes
-                    const carouselInner = document.getElementById('quotes-carousel-inner');
-                    
-                    data.forEach((quote, index) => {
-                        const carouselItem = document.createElement('div');
-                        carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-                        
-                        carouselItem.innerHTML = `
-                            <div class="row mx-auto align-items-center">
-                                <div class="col-12 col-sm-2 col-lg-2 offset-lg-1 text-center">
-                                    <img src="${quote.pic_url}" class="d-block align-self-center" alt="${quote.name}" />
-                                </div>
-                                <div class="col-12 col-sm-7 offset-sm-2 col-lg-9 offset-lg-0">
-                                    <div class="quote-text">
-                                        <p class="text-white">« ${quote.text} </p>
-                                        <h4 class="text-white font-weight-bold">${quote.name}</h4>
-                                        <span class="text-white">${quote.subtext}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        carouselInner.appendChild(carouselItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching quotes:', error);
-                    // Fallback in case API fails - you could show a default quote here
-                    document.getElementById('quotes-loader').innerHTML = '<p class="text-white">Failed to load quotes. Please try again later.</p>';
-                });
-        });
-        //Static videos js//
-        // Function to create star rating HTML
-        function createStarRating(rating) {
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    stars += `<img src="images/star_on.png" alt="star on" width="15px" />`;
-                } else if (i === fullStars && hasHalfStar) {
-                    stars += `<img src="images/star_half.png" alt="star half" width="15px" />`;
-                } else {
-                    stars += `<img src="images/star_off.png" alt="star off" width="15px" />`;
+            // Function to create star rating HTML
+            function createStarRating(rating) {
+                let stars = '';
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        stars += `<img src="images/star_on.png" alt="star on" width="15px" />`;
+                    } else if (i === fullStars && hasHalfStar) {
+                        stars += `<img src="images/star_half.png" alt="star half" width="15px" />`;
+                    } else {
+                        stars += `<img src="images/star_off.png" alt="star off" width="15px" />`;
+                    }
                 }
+                return stars;
             }
-            return stars;
-        }
-    
-        // Function to create video card HTML
-        function createVideoCard(video, isActive = false) {
-            return `
-                <div class="carousel-item ${isActive ? 'active' : ''}">
-                    <div class="row align-items-center mx-auto">
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex justify-content-center justify-content-md-end justify-content-lg-center">
-                            <div class="card">
-                                <img src="${video.thumbnail}" class="card-img-top" alt="${video.title}" />
-                                <div class="card-img-overlay text-center">
-                                    <img src="images/play.png" alt="Play" width="64px" class="align-self-center play-overlay" />
+        
+            // Function to create video card HTML
+            function createVideoCard(video) {
+                return `
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex justify-content-center justify-content-md-end justify-content-lg-center">
+                        <div class="card">
+                            <img src="${video.thumbnail}" class="card-img-top" alt="${video.title}" />
+                            <div class="card-img-overlay text-center">
+                                <img src="images/play.png" alt="Play" width="64px" class="align-self-center play-overlay" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">${video.title}</h5>
+                                <p class="card-text text-muted">${video.description}</p>
+                                <div class="creator d-flex align-items-center">
+                                    <img src="${video.author.avatar}" alt="${video.author.name}" width="30px" class="rounded-circle" />
+                                    <h6 class="pl-3 m-0 main-color">${video.author.name}</h6>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title font-weight-bold">${video.title}</h5>
-                                    <p class="card-text text-muted">${video.description}</p>
-                                    <div class="creator d-flex align-items-center">
-                                        <img src="${video.author.avatar}" alt="${video.author.name}" width="30px" class="rounded-circle" />
-                                        <h6 class="pl-3 m-0 main-color">${video.author.name}</h6>
+                                <div class="info pt-3 d-flex justify-content-between">
+                                    <div class="rating">
+                                        ${createStarRating(video.rating)}
                                     </div>
-                                    <div class="info pt-3 d-flex justify-content-between">
-                                        <div class="rating">
-                                            ${createStarRating(video.rating)}
-                                        </div>
-                                        <span class="main-color">${video.duration} min</span>
-                                    </div>
+                                    <span class="main-color">${video.duration} min</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }
-    
-        // Fetch videos from API
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://smileschool-api.hbtn.info/popular-tutorials')
-                .then(response => response.json())
-                .then(data => {
-                    // Hide loader
-                    document.getElementById('videos-loader').style.display = 'none';
-                    const carousel = document.getElementById('videos-carousel');
-                    carousel.style.display = 'block';
-                    
-                    // Populate carousel with videos
-                    const carouselInner = document.getElementById('videos-carousel-inner');
-                    
-                    // Group videos into sets of 4 for each carousel item
-                    const videosPerSlide = 4;
-                    for (let i = 0; i < data.length; i += videosPerSlide) {
-                        const videoGroup = data.slice(i, i + videosPerSlide);
-                        let cardsHtml = '';
+                `;
+            }
+        
+            // Function to load quotes
+            function loadQuotes() {
+                fetch('https://smileschool-api.hbtn.info/quotes')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const loader = document.getElementById('quotes-loader');
+                        const carousel = document.getElementById('quotes-carousel');
                         
-                        videoGroup.forEach((video, index) => {
-                            // For the first video in the first group, make it active
-                            const isActive = i === 0 && index === 0;
-                            cardsHtml += createVideoCard(video, isActive);
-                        });
+                        loader.style.display = 'none';
+                        carousel.style.display = 'block';
                         
-                        const carouselItem = document.createElement('div');
-                        carouselItem.className = `carousel-item ${i === 0 ? 'active' : ''}`;
-                        carouselItem.innerHTML = `
-                            <div class="row align-items-center mx-auto">
-                                ${videoGroup.map(video => `
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex justify-content-center justify-content-md-end justify-content-lg-center">
-                                        <div class="card">
-                                            <img src="${video.thumbnail}" class="card-img-top" alt="${video.title}" />
-                                            <div class="card-img-overlay text-center">
-                                                <img src="images/play.png" alt="Play" width="64px" class="align-self-center play-overlay" />
-                                            </div>
-                                            <div class="card-body">
-                                                <h5 class="card-title font-weight-bold">${video.title}</h5>
-                                                <p class="card-text text-muted">${video.description}</p>
-                                                <div class="creator d-flex align-items-center">
-                                                    <img src="${video.author.avatar}" alt="${video.author.name}" width="30px" class="rounded-circle" />
-                                                    <h6 class="pl-3 m-0 main-color">${video.author.name}</h6>
-                                                </div>
-                                                <div class="info pt-3 d-flex justify-content-between">
-                                                    <div class="rating">
-                                                        ${createStarRating(video.rating)}
-                                                    </div>
-                                                    <span class="main-color">${video.duration} min</span>
-                                                </div>
-                                            </div>
+                        const carouselInner = document.getElementById('quotes-carousel-inner');
+                        
+                        data.forEach((quote, index) => {
+                            const carouselItem = document.createElement('div');
+                            carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                            
+                            carouselItem.innerHTML = `
+                                <div class="row mx-auto align-items-center">
+                                    <div class="col-12 col-sm-2 col-lg-2 offset-lg-1 text-center">
+                                        <img src="${quote.pic_url}" class="d-block align-self-center" alt="${quote.name}" />
+                                    </div>
+                                    <div class="col-12 col-sm-7 offset-sm-2 col-lg-9 offset-lg-0">
+                                        <div class="quote-text">
+                                            <p class="text-white">« ${quote.text} </p>
+                                            <h4 class="text-white font-weight-bold">${quote.name}</h4>
+                                            <span class="text-white">${quote.subtext}</span>
                                         </div>
                                     </div>
-                                `).join('')}
-                            </div>
-                        `;
+                                </div>
+                            `;
+                            
+                            carouselInner.appendChild(carouselItem);
+                        });
                         
-                        carouselInner.appendChild(carouselItem);
-                    }
-                    
-                    // Initialize carousel with single item sliding
-                    $('#carouselExampleControls2').carousel({
-                        interval: false
+                        // Initialize carousel
+                        $('#carouselExampleControls').carousel({
+                            interval: 5000 // Auto-rotate every 5 seconds
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching quotes:', error);
+                        document.getElementById('quotes-loader').innerHTML = '<p class="text-white">Failed to load quotes. Please try again later.</p>';
                     });
-                })
-                .catch(error => {
-                    console.error('Error fetching videos:', error);
-                    document.getElementById('videos-loader').innerHTML = '<p class="text-center">Failed to load videos. Please try again later.</p>';
-                });
+            }
+        
+            // Function to load videos (generic for both popular and latest)
+            function loadVideos(apiUrl, loaderId, carouselId, innerId, controlsId) {
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const loader = document.getElementById(loaderId);
+                        const carousel = document.getElementById(carouselId);
+                        
+                        loader.style.display = 'none';
+                        carousel.style.display = 'block';
+                        
+                        const carouselInner = document.getElementById(innerId);
+                        
+                        // Group videos into sets of 4 for each carousel item
+                        const videosPerSlide = 4;
+                        for (let i = 0; i < data.length; i += videosPerSlide) {
+                            const videoGroup = data.slice(i, i + videosPerSlide);
+                            
+                            const carouselItem = document.createElement('div');
+                            carouselItem.className = `carousel-item ${i === 0 ? 'active' : ''}`;
+                            carouselItem.innerHTML = `
+                                <div class="row align-items-center mx-auto">
+                                    ${videoGroup.map(video => createVideoCard(video)).join('')}
+                                </div>
+                            `;
+                            
+                            carouselInner.appendChild(carouselItem);
+                        }
+                        
+                        // Initialize carousel
+                        $(`#${controlsId}`).carousel({
+                            interval: false // Disable auto-rotation
+                        });
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching videos from ${apiUrl}:`, error);
+                        document.getElementById(loaderId).innerHTML = '<p class="text-center">Failed to load videos. Please try again later.</p>';
+                    });
+            }
+        
+            // Load all sections when DOM is ready
+            loadQuotes();
+            loadVideos(
+                'https://smileschool-api.hbtn.info/popular-tutorials',
+                'popular-videos-loader',
+                'popular-videos-carousel',
+                'popular-videos-carousel-inner',
+                'carouselExampleControls2'
+            );
+            loadVideos(
+                'https://smileschool-api.hbtn.info/latest-videos',
+                'latest-videos-loader',
+                'latest-videos-carousel',
+                'latest-videos-carousel-inner',
+                'carouselExampleControls3'
+            );
         });
     </script>
   </body>

@@ -77,3 +77,5 @@ The Holberton Smiling School web pages were developed by sections using the Boot
 Jhoan Zamora: [jzamora5](https://github.com/jzamora5)
 
 John Wilson: [paintballskaguy](https://github.com/paintballskaguy)
+
+[link to the site](https://paintballskaguy.github.io/atlas-smiling-school-javascript/homepage)
