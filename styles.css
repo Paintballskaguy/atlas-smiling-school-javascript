@@ -306,6 +306,18 @@
 
 /* POPULAR SECTION  */
 
+#videos-carousel .carousel-inner {
+    overflow: visible;
+}
+
+#videos-carousel .carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+#videos-carousel .card {
+    margin-bottom: 20px;
+}
+
 .popular {
   height: auto;
   background-color: var(--color-white);
